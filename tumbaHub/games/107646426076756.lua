@@ -33,28 +33,39 @@ task.spawn(function()
         task.wait(0.5)
     end
 
-    -- 1. Register Translations
-    local ruStrings = {
-        ["section_game_features"] = "🌾 ФУНКЦИИ ИГРЫ",
-        ["toggle_autobuy_seeds"] = "Авто-покупка семян",
-        ["dropdown_select_seed"] = "Выбор семян",
-        ["slider_buy_amount"] = "Количество для покупки",
+    -- 1. Register Translations (Explicit keys to avoid any settings/localization mismatches)
+    Mega.Localization.Strings["section_game_features"] = { 
+        ru = "🌾 ФУНКЦИИ ИГРЫ", 
+        language_russian = "🌾 ФУНКЦИИ ИГРЫ", 
+        en = "🌾 GAME FEATURES", 
+        language_english = "🌾 GAME FEATURES", 
+        uk = "🌾 ФУНКЦІЇ ГРИ", 
+        language_ukrainian = "🌾 ФУНКЦІЇ ГРИ" 
     }
-    local enStrings = {
-        ["section_game_features"] = "🌾 GAME FEATURES",
-        ["toggle_autobuy_seeds"] = "Auto-Buy Seeds",
-        ["dropdown_select_seed"] = "Select Seed",
-        ["slider_buy_amount"] = "Purchase Amount",
+    Mega.Localization.Strings["toggle_autobuy_seeds"] = { 
+        ru = "Авто-покупка семян", 
+        language_russian = "Авто-покупка семян", 
+        en = "Auto-Buy Seeds", 
+        language_english = "Auto-Buy Seeds", 
+        uk = "Авто-купівля насіння", 
+        language_ukrainian = "Авто-купівля насіння" 
     }
-    local ukStrings = {
-        ["section_game_features"] = "🌾 ФУНКЦІЇ ГРИ",
-        ["toggle_autobuy_seeds"] = "Авто-купівля насіння",
-        ["dropdown_select_seed"] = "Вибір насіння",
-        ["slider_buy_amount"] = "Кількість для покупки",
+    Mega.Localization.Strings["dropdown_select_seed"] = { 
+        ru = "Выбор семян", 
+        language_russian = "Выбор семян", 
+        en = "Select Seed", 
+        language_english = "Select Seed", 
+        uk = "Вибір насіння", 
+        language_ukrainian = "Вибір насіння" 
     }
-    for k, v in pairs(ruStrings) do
-        Mega.Localization.Strings[k] = { ru = v, en = enStrings[k], uk = ukStrings[k] }
-    end
+    Mega.Localization.Strings["slider_buy_amount"] = { 
+        ru = "Количество для покупки", 
+        language_russian = "Количество для покупки", 
+        en = "Purchase Amount", 
+        language_english = "Purchase Amount", 
+        uk = "Кількість для покупки", 
+        language_ukrainian = "Кількість для покупки" 
+    }
 
     -- 2. Initialize States
     Mega.States.Game = Mega.States.Game or {}
