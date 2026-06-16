@@ -166,8 +166,8 @@ function Mega.LoadModule(path)
 
     -- 2. Fetch from GitHub HttpGet (default behavior for users)
     if not success or not content then
-        local url = Mega.RepositoryBaseURL .. path
-        success, content = pcall(function() return game:HttpGet(url, true) end)
+        local url = Mega.RepositoryBaseURL .. path .. "?t=" .. tostring(os.time())
+        success, content = pcall(function() return game:HttpGet(url, false) end)
         if success and (content:find("404: Not Found") or content:lower():match("timeout") or #content < 10) then 
             success = false
             content = nil 
