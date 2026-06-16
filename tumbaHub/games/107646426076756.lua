@@ -1,5 +1,23 @@
 -- games/107646426076756.lua
--- Auto-Roll and Auto-Buy features for Farming Friends (Place ID: 107646426076756)
+-- Auto-Roll and Auto-Buy features with Rarity Selection for Farming Friends (Place ID: 107646426076756)
+
+local SeedRarityMap = {
+    ["Promise Lily"] = "Uncommon",
+    ["Twinflame Tulip"] = "Epic",
+    ["Amulet Anemone"] = "Legendary",
+    ["Duoheart Daisy"] = "Prismatic",
+    ["Heartvine Bloom"] = "Exotic",
+    ["Soulbound Orchid"] = "Transcended"
+}
+
+local RarityPriority = {
+    ["Uncommon"] = 1,
+    ["Epic"] = 2,
+    ["Legendary"] = 3,
+    ["Prismatic"] = 4,
+    ["Exotic"] = 5,
+    ["Transcended"] = 6
+}
 
 local function GetPendingSeed()
     local player = game:GetService("Players").LocalPlayer
@@ -52,6 +70,14 @@ local function RegisterTranslations()
         uk = "Авто-купівля випавшого насіння", 
         language_ukrainian = "Авто-купівля випавшого насіння" 
     }
+    Mega.Localization.Strings["dropdown_min_rarity"] = { 
+        ru = "Мин. редкость для покупки", 
+        language_russian = "Мин. редкость для покупки", 
+        en = "Min Rarity to Buy", 
+        language_english = "Min Rarity to Buy", 
+        uk = "Мін. рідкість для купівлі", 
+        language_ukrainian = "Мін. рідкість для купівлі" 
+    }
 end
 
 local function CreateElements(TabFrame)
@@ -65,12 +91,17 @@ local function CreateElements(TabFrame)
     UI.CreateToggle(TabFrame, "toggle_autobuy_seeds", "Game.AutoBuy", function(state)
         Mega.States.Game.AutoBuy = state
     end)
+
+    UI.CreateDropdown(TabFrame, "dropdown_min_rarity", "Game.MinRarity", {"All", "Uncommon", "Epic", "Legendary", "Prismatic", "Exotic", "Transcended"}, function(val)
+        Mega.States.Game.MinRarity = val
+    end, false)
 end
 
 -- Initialize States
 Mega.States.Game = Mega.States.Game or {}
 if Mega.States.Game.AutoRoll == nil then Mega.States.Game.AutoRoll = false end
 if Mega.States.Game.AutoBuy == nil then Mega.States.Game.AutoBuy = false end
+if Mega.States.Game.MinRarity == nil then Mega.States.Game.MinRarity = "All" end
 
 -- Monitor GUI life cycle and recreate elements on reload
 task.spawn(function()
@@ -104,6 +135,22 @@ local function GetRemotesFolder()
     return replicatedStorage:FindFirstChild("Remotes") or replicatedStorage:FindFirstChild("remotes")
 end
 
+-- Helper to check if a pending seed should be bought based on user settings
+local function ShouldBuySeed(pendingSeed)
+    if not pendingSeed or pendingSeed == "" then return false end
+    
+    local selectedMinRarity = Mega.States.Game.MinRarity or "All"
+    if selectedMinRarity == "All" then
+        return true
+    end
+    
+    local rarity = SeedRarityMap[pendingSeed] or "Uncommon"
+    local seedPriority = RarityPriority[rarity] or 1
+    local minPriority = RarityPriority[selectedMinRarity] or 1
+    
+    return seedPriority >= minPriority
+end
+
 -- 1. Auto-Roll Loop
 task.spawn(function()
     while true do
@@ -112,9 +159,12 @@ task.spawn(function()
             local pendingSeed = GetPendingSeed()
             local canRoll = true
             
-            -- If Auto-Buy is enabled and there's already a seed pending, wait for it to be bought first
+            -- If Auto-Buy is enabled and we rolled a seed that we WANT to buy, wait for the buy loop to claim it.
+            -- If we do not want this seed, canRoll remains true, and we roll again to overwrite it.
             if Mega.States.Game.AutoBuy and pendingSeed and pendingSeed ~= "" then
-                canRoll = false
+                if ShouldBuySeed(pendingSeed) then
+                    canRoll = false
+                end
             end
             
             if canRoll then
@@ -140,13 +190,12 @@ task.spawn(function()
         task.wait(0.1)
         if Mega.States.Game and Mega.States.Game.AutoBuy then
             local pendingSeed = GetPendingSeed()
-            if pendingSeed and pendingSeed ~= "" then
+            if pendingSeed and pendingSeed ~= "" and ShouldBuySeed(pendingSeed) then
                 pcall(function()
                     local remotes = GetRemotesFolder()
                     local buySeedRemote = remotes and remotes:FindFirstChild("BuySeed")
                     if buySeedRemote then
-                        -- Since players can upgrade roll count and roll multiple seeds at once onto separate podiums,
-                        -- we fire the remote for all active slot indices (1 to 5) to buy everything.
+                        -- Fire remote for all slots (1 to 5) to claim the seeds
                         for slot = 1, 5 do
                             buySeedRemote:FireServer(slot)
                         end
