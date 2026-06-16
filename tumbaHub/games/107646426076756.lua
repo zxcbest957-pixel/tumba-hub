@@ -1,5 +1,5 @@
 -- games/107646426076756.lua
--- Auto-Roll, Auto-Buy, and Auto-Upgrade features for Farming Friends (Place ID: 107646426076756)
+-- Auto-Roll and Auto-Buy features for Farming Friends (Place ID: 107646426076756)
 
 local function GetPendingSeed()
     local player = game:GetService("Players").LocalPlayer
@@ -52,22 +52,6 @@ local function RegisterTranslations()
         uk = "Авто-купівля випавшого насіння", 
         language_ukrainian = "Авто-купівля випавшого насіння" 
     }
-    Mega.Localization.Strings["toggle_autoupgrade_rolls"] = { 
-        ru = "Авто-прокачка количества рулетки", 
-        language_russian = "Авто-прокачка количества рулетки", 
-        en = "Auto-Upgrade Roll Count", 
-        language_english = "Auto-Upgrade Roll Count", 
-        uk = "Авто-прокачка кількості рулетки", 
-        language_ukrainian = "Авто-прокачка кількості рулетки" 
-    }
-    Mega.Localization.Strings["toggle_autoupgrade_luck"] = { 
-        ru = "Авто-прокачка удачи рулетки", 
-        language_russian = "Авто-прокачка удачи рулетки", 
-        en = "Auto-Upgrade Roll Luck", 
-        language_english = "Auto-Upgrade Roll Luck", 
-        uk = "Авто-прокачка удачі рулетки", 
-        language_ukrainian = "Авто-прокачка удачі рулетки" 
-    }
 end
 
 local function CreateElements(TabFrame)
@@ -81,22 +65,12 @@ local function CreateElements(TabFrame)
     UI.CreateToggle(TabFrame, "toggle_autobuy_seeds", "Game.AutoBuy", function(state)
         Mega.States.Game.AutoBuy = state
     end)
-    
-    UI.CreateToggle(TabFrame, "toggle_autoupgrade_rolls", "Game.AutoUpgradeRolls", function(state)
-        Mega.States.Game.AutoUpgradeRolls = state
-    end)
-    
-    UI.CreateToggle(TabFrame, "toggle_autoupgrade_luck", "Game.AutoUpgradeLuck", function(state)
-        Mega.States.Game.AutoUpgradeLuck = state
-    end)
 end
 
 -- Initialize States
 Mega.States.Game = Mega.States.Game or {}
 if Mega.States.Game.AutoRoll == nil then Mega.States.Game.AutoRoll = false end
 if Mega.States.Game.AutoBuy == nil then Mega.States.Game.AutoBuy = false end
-if Mega.States.Game.AutoUpgradeRolls == nil then Mega.States.Game.AutoUpgradeRolls = false end
-if Mega.States.Game.AutoUpgradeLuck == nil then Mega.States.Game.AutoUpgradeLuck = false end
 
 -- Monitor GUI life cycle and recreate elements on reload
 task.spawn(function()
@@ -179,46 +153,6 @@ task.spawn(function()
                     end
                 end)
             end
-        end
-    end
-end)
-
--- 3. Auto-Upgrade Rolls Loop
-task.spawn(function()
-    while true do
-        task.wait(1)
-        if Mega.States.Game and Mega.States.Game.AutoUpgradeRolls then
-            pcall(function()
-                local remotes = GetRemotesFolder()
-                local upgradeRemote = remotes and remotes:FindFirstChild("UpgradeSeedRolls")
-                if upgradeRemote then
-                    if upgradeRemote:IsA("RemoteEvent") then
-                        upgradeRemote:FireServer()
-                    elseif upgradeRemote:IsA("RemoteFunction") then
-                        upgradeRemote:InvokeServer()
-                    end
-                end
-            end)
-        end
-    end
-end)
-
--- 4. Auto-Upgrade Luck Loop
-task.spawn(function()
-    while true do
-        task.wait(1)
-        if Mega.States.Game and Mega.States.Game.AutoUpgradeLuck then
-            pcall(function()
-                local remotes = GetRemotesFolder()
-                local upgradeRemote = remotes and remotes:FindFirstChild("UpgradeSeedLuck")
-                if upgradeRemote then
-                    if upgradeRemote:IsA("RemoteEvent") then
-                        upgradeRemote:FireServer()
-                    elseif upgradeRemote:IsA("RemoteFunction") then
-                        upgradeRemote:InvokeServer()
-                    end
-                end
-            end)
         end
     end
 end)
