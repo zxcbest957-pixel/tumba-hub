@@ -8,6 +8,36 @@ local States = Mega.States
 local GetText = Mega.GetText
 local iconBaseUrl = Mega.RepositoryBaseURL .. "icon/"
 
+if not Mega.HasSavedLanguage then
+    function Mega.SaveLanguage(lang)
+        if writefile then
+            if not isfolder("tumbaHub") then pcall(makefolder, "tumbaHub") end
+            if not isfolder("tumbaHub/configs") then pcall(makefolder, "tumbaHub/configs") end
+            pcall(writefile, "tumbaHub/configs/Language.txt", lang)
+        end
+    end
+
+    function Mega.LoadLanguage()
+        if readfile and isfile then
+            if isfile("tumbaHub/configs/Language.txt") then
+                local success, lang = pcall(readfile, "tumbaHub/configs/Language.txt")
+                if success and lang then return lang end
+            elseif isfile("TumbaLanguage.txt") then
+                local success, lang = pcall(readfile, "TumbaLanguage.txt")
+                if success and lang then 
+                    Mega.SaveLanguage(lang)
+                    return lang 
+                end
+            end
+        end
+        return "en"
+    end
+
+    function Mega.HasSavedLanguage()
+        return (isfile and (isfile("tumbaHub/configs/Language.txt") or isfile("TumbaLanguage.txt")))
+    end
+end
+
 function Mega.ReloadGUI()
     if Mega.Objects and Mega.Objects.Connections then
         for _, conn in pairs(Mega.Objects.Connections) do
