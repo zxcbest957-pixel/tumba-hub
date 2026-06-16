@@ -1,6 +1,8 @@
 -- games/107646426076756.lua
 -- Auto-Buy features for Farming Friends (Place ID: 107646426076756)
 
+local Mega, game, script = ...
+
 local function GetSeedList()
     local seeds = {}
     local success, err = pcall(function()
@@ -22,18 +24,7 @@ local function GetSeedList()
     return seeds
 end
 
-task.spawn(function()
-    -- Wait indefinitely for the Utilities Tab to be registered in the UI (handles time spent on the language prompt)
-    local TabFrame = nil
-    while true do
-        if Mega.Objects and Mega.Objects.TabFrames and Mega.Objects.TabFrames["tab_utils"] then
-            TabFrame = Mega.Objects.TabFrames["tab_utils"]
-            break
-        end
-        task.wait(0.5)
-    end
-
-    -- 1. Register Translations (Explicit keys to avoid any settings/localization mismatches)
+local function RegisterTranslations()
     Mega.Localization.Strings["section_game_features"] = { 
         ru = "🌾 ФУНКЦИИ ИГРЫ", 
         language_russian = "🌾 ФУНКЦИИ ИГРЫ", 
@@ -66,14 +57,9 @@ task.spawn(function()
         uk = "Кількість для покупки", 
         language_ukrainian = "Кількість для покупки" 
     }
+end
 
-    -- 2. Initialize States
-    Mega.States.Game = Mega.States.Game or {}
-    if Mega.States.Game.AutoBuySeeds == nil then Mega.States.Game.AutoBuySeeds = false end
-    if Mega.States.Game.SelectedSeed == nil then Mega.States.Game.SelectedSeed = "Carrot" end
-    if Mega.States.Game.BuyAmount == nil then Mega.States.Game.BuyAmount = 10 end
-
-    -- 3. Create UI elements
+local function CreateElements(TabFrame)
     local UI = Mega.UI
     UI.CreateSection(TabFrame, "section_game_features")
     
@@ -90,28 +76,60 @@ task.spawn(function()
     UI.CreateSlider(TabFrame, "slider_buy_amount", "Game.BuyAmount", 1, 100, function(val)
         Mega.States.Game.BuyAmount = val
     end)
-    
-    -- 4. Start AutoBuy Loop
-    task.spawn(function()
+end
+
+-- Initialize States
+Mega.States.Game = Mega.States.Game or {}
+if Mega.States.Game.AutoBuySeeds == nil then Mega.States.Game.AutoBuySeeds = false end
+if Mega.States.Game.SelectedSeed == nil then Mega.States.Game.SelectedSeed = "Carrot" end
+if Mega.States.Game.BuyAmount == nil then Mega.States.Game.BuyAmount = 10 end
+
+-- Start background loop to monitor GUI life cycle and recreate elements on reload
+task.spawn(function()
+    while true do
+        local TabFrame = nil
         while true do
-            task.wait(1)
-            if Mega.States.Game and Mega.States.Game.AutoBuySeeds then
-                local seed = Mega.States.Game.SelectedSeed
-                local amount = Mega.States.Game.BuyAmount or 10
-                if seed and seed ~= "" then
-                    pcall(function()
-                        local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("remotes")
-                        local buySeedRemote = remotes and remotes:FindFirstChild("BuySeed")
-                        if buySeedRemote then
-                            if buySeedRemote:IsA("RemoteEvent") then
-                                buySeedRemote:FireServer(seed, amount)
-                            elseif buySeedRemote:IsA("RemoteFunction") then
-                                buySeedRemote:InvokeServer(seed, amount)
-                            end
+            if Mega.Objects and Mega.Objects.TabFrames and Mega.Objects.TabFrames["tab_utils"] then
+                TabFrame = Mega.Objects.TabFrames["tab_utils"]
+                break
+            end
+            task.wait(0.5)
+        end
+        
+        if not TabFrame:FindFirstChild("section_game_featuresSection") then
+            pcall(function()
+                RegisterTranslations()
+                CreateElements(TabFrame)
+            end)
+        end
+        
+        -- Wait until this TabFrame is destroyed (e.g. on language change or manual reload)
+        while TabFrame and TabFrame.Parent do
+            task.wait(0.5)
+        end
+    end
+end)
+
+-- Start AutoBuy Loop (Runs once globally)
+task.spawn(function()
+    while true do
+        task.wait(1)
+        if Mega.States.Game and Mega.States.Game.AutoBuySeeds then
+            local seed = Mega.States.Game.SelectedSeed
+            local amount = Mega.States.Game.BuyAmount or 10
+            if seed and seed ~= "" then
+                pcall(function()
+                    local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("remotes")
+                    local buySeedRemote = remotes and remotes:FindFirstChild("BuySeed")
+                    if buySeedRemote then
+                        if buySeedRemote:IsA("RemoteEvent") then
+                            buySeedRemote:FireServer(seed, amount)
+                        elseif buySeedRemote:IsA("RemoteFunction") then
+                            buySeedRemote:InvokeServer(seed, amount)
                         end
-                    end)
-                end
+                    end
+                end)
             end
         end
-    end)
+    end
 end)
