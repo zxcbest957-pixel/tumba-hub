@@ -1,8 +1,6 @@
 -- games/107646426076756.lua
 -- Auto-Buy features for Farming Friends (Place ID: 107646426076756)
 
-local Mega, game, script = ...
-
 local function GetSeedList()
     local seeds = {}
     local success, err = pcall(function()
