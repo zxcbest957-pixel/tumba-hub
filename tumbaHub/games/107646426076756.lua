@@ -23,19 +23,14 @@ local function GetSeedList()
 end
 
 task.spawn(function()
-    -- Wait for the Utilities Tab to be registered in the UI
+    -- Wait indefinitely for the Utilities Tab to be registered in the UI (handles time spent on the language prompt)
     local TabFrame = nil
-    for i = 1, 10 do
+    while true do
         if Mega.Objects and Mega.Objects.TabFrames and Mega.Objects.TabFrames["tab_utils"] then
             TabFrame = Mega.Objects.TabFrames["tab_utils"]
             break
         end
-        task.wait(1)
-    end
-    
-    if not TabFrame then
-        warn("TumbaHub [Game Script]: Utilities tab not found.")
-        return
+        task.wait(0.5)
     end
 
     -- 1. Register Translations
