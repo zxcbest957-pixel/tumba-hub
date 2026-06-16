@@ -124,6 +124,12 @@ task.spawn(function()
     end
 end)
 
+-- Helper to safely get the Remotes folder
+local function GetRemotesFolder()
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    return replicatedStorage:FindFirstChild("Remotes") or replicatedStorage:FindFirstChild("remotes")
+end
+
 -- 1. Auto-Roll Loop
 task.spawn(function()
     while true do
@@ -139,7 +145,7 @@ task.spawn(function()
             
             if canRoll then
                 pcall(function()
-                    local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("remotes")
+                    local remotes = GetRemotesFolder()
                     local rollRemote = remotes and remotes:FindFirstChild("RollSeeds")
                     if rollRemote then
                         if rollRemote:IsA("RemoteEvent") then
@@ -162,10 +168,14 @@ task.spawn(function()
             local pendingSeed = GetPendingSeed()
             if pendingSeed and pendingSeed ~= "" then
                 pcall(function()
-                    local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("remotes")
+                    local remotes = GetRemotesFolder()
                     local buySeedRemote = remotes and remotes:FindFirstChild("BuySeed")
                     if buySeedRemote then
-                        buySeedRemote:FireServer(pendingSeed)
+                        -- Since players can upgrade roll count and roll multiple seeds at once onto separate podiums,
+                        -- we fire the remote for all active slot indices (1 to 5) to buy everything.
+                        for slot = 1, 5 do
+                            buySeedRemote:FireServer(slot)
+                        end
                     end
                 end)
             end
@@ -179,7 +189,7 @@ task.spawn(function()
         task.wait(1)
         if Mega.States.Game and Mega.States.Game.AutoUpgradeRolls then
             pcall(function()
-                local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("remotes")
+                local remotes = GetRemotesFolder()
                 local upgradeRemote = remotes and remotes:FindFirstChild("UpgradeSeedRolls")
                 if upgradeRemote then
                     if upgradeRemote:IsA("RemoteEvent") then
@@ -199,7 +209,7 @@ task.spawn(function()
         task.wait(1)
         if Mega.States.Game and Mega.States.Game.AutoUpgradeLuck then
             pcall(function()
-                local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("remotes")
+                local remotes = GetRemotesFolder()
                 local upgradeRemote = remotes and remotes:FindFirstChild("UpgradeSeedLuck")
                 if upgradeRemote then
                     if upgradeRemote:IsA("RemoteEvent") then
