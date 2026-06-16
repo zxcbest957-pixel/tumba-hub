@@ -149,14 +149,13 @@ function Mega.LoadModule(path)
     local content = nil
     local success = false
     
-    -- 1. Try local files first for development
-    if isfile and readfile then
+    -- 1. Try local files first for development if DevMode is enabled
+    if shared.TumbaHubDevMode and isfile and readfile then
         local possiblePaths = {
             "tumba hub games/tumbaHub/" .. path,
             "tumbaHub/" .. path,
             path
         }
-        
         for _, p in ipairs(possiblePaths) do
             if isfile(p) then
                 success, content = pcall(readfile, p)
@@ -165,13 +164,30 @@ function Mega.LoadModule(path)
         end
     end
 
-    -- 2. Fallback to GitHub HttpGet
+    -- 2. Fetch from GitHub HttpGet (default behavior for users)
     if not success or not content then
         local url = Mega.RepositoryBaseURL .. path
         success, content = pcall(function() return game:HttpGet(url, true) end)
         if success and (content:find("404: Not Found") or content:lower():match("timeout") or #content < 10) then 
             success = false
             content = nil 
+        end
+    end
+
+    -- 3. Fallback to local files if remote fails and we didn't try them yet
+    if not success or not content then
+        if not shared.TumbaHubDevMode and isfile and readfile then
+            local possiblePaths = {
+                "tumba hub games/tumbaHub/" .. path,
+                "tumbaHub/" .. path,
+                path
+            }
+            for _, p in ipairs(possiblePaths) do
+                if isfile(p) then
+                    success, content = pcall(readfile, p)
+                    if success and content and #content > 0 then break end
+                end
+            end
         end
     end
 
@@ -313,7 +329,7 @@ local queue_on_teleport = queue_on_teleport or (syn and syn.queue_on_teleport) o
 if queue_on_teleport then
     local teleportCode = [[
         task.wait(1)
-        if isfile and readfile then
+        if shared.TumbaHubDevMode and isfile and readfile then
             if isfile("tumbaHub/tumbaHub.lua") then
                 loadstring(readfile("tumbaHub/tumbaHub.lua"))()
             elseif isfile("tumba hub games/tumbaHub/tumbaHub.lua") then
