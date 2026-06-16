@@ -207,3 +207,35 @@ Mega.Localization = {
 }
 
 Mega.GetText = Mega.Localization.GetText
+
+function Mega.SaveLanguage(lang)
+    if writefile then
+        if not isfolder("tumbaHub") then pcall(makefolder, "tumbaHub") end
+        if not isfolder("tumbaHub/configs") then pcall(makefolder, "tumbaHub/configs") end
+        pcall(writefile, "tumbaHub/configs/Language.txt", lang)
+    end
+end
+
+function Mega.LoadLanguage()
+    if readfile and isfile then
+        if isfile("tumbaHub/configs/Language.txt") then
+            local success, lang = pcall(readfile, "tumbaHub/configs/Language.txt")
+            if success and lang then return lang end
+        elseif isfile("TumbaLanguage.txt") then
+            local success, lang = pcall(readfile, "TumbaLanguage.txt")
+            if success and lang then 
+                Mega.SaveLanguage(lang)
+                return lang 
+            end
+        end
+    end
+    return "en"
+end
+
+function Mega.HasSavedLanguage()
+    return (isfile and (isfile("tumbaHub/configs/Language.txt") or isfile("TumbaLanguage.txt")))
+end
+
+-- Load saved language on startup
+Mega.Localization.CurrentLanguage = Mega.LoadLanguage()
+
