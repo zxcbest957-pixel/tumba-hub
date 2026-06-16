@@ -6,7 +6,7 @@ local Services = Mega.Services
 local Settings = Mega.Settings
 local States = Mega.States
 local GetText = Mega.GetText
-local iconBaseUrl = "https://raw.githubusercontent.com/daniaggbro-cloud/betatesttumba/main/TumbaHub-main%20(3)/TumbaHub-main/tumbaHub/icon/"
+local iconBaseUrl = Mega.RepositoryBaseURL .. "icon/"
 
 function Mega.ReloadGUI()
     if Mega.Objects and Mega.Objects.Connections then

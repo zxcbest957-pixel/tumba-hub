@@ -108,7 +108,7 @@ Mega = {
 getgenv().Mega = Mega
 
 -- Configure repository base URL
-local baseRepoURL = shared.TumbaHubRepoURL or "https://raw.githubusercontent.com/zxcbest957-pixel/tumba-vape/main/tumbaHub/"
+local baseRepoURL = shared.TumbaHubRepoURL or "https://raw.githubusercontent.com/zxcbest957-pixel/tumba-hub/main/tumbaHub/"
 Mega.RepositoryBaseURL = baseRepoURL
 
 function Mega.GetImageFromURL(url, fileName)
@@ -319,10 +319,10 @@ if queue_on_teleport then
             elseif isfile("tumba hub games/tumbaHub/tumbaHub.lua") then
                 loadstring(readfile("tumba hub games/tumbaHub/tumbaHub.lua"))()
             else
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/zxcbest957-pixel/tumba-vape/main/tumbaHub/tumbaHub.lua", true))()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/zxcbest957-pixel/tumba-hub/main/tumbaHub/tumbaHub.lua", true))()
             end
         else
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/zxcbest957-pixel/tumba-vape/main/tumbaHub/tumbaHub.lua", true))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/zxcbest957-pixel/tumba-hub/main/tumbaHub/tumbaHub.lua", true))()
         end
     ]]
     queue_on_teleport(teleportCode)
