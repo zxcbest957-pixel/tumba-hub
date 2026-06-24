@@ -97,6 +97,23 @@ Mega.Localization = {
         ["button_clear_chat"] = { ru = "🧹 Очистить чат", en = "🧹 Clear Chat", uk = "🧹 Очистити чат" },
         ["button_reload_script"] = { ru = "🔄 Перезагрузить GUI", en = "🔄 Reload GUI", uk = "🔄 Перезавантажити GUI" },
 
+        -- Aim Assist
+        ["tab_aim"] = { ru = "AIM", en = "AIM", es = "PUNTERÍA", pt = "MIRA", ko = "조준", ja = "狙い", uk = "AIM" },
+        ["section_aim_main"] = { ru = "🎯 ОСНОВНЫЕ НАСТРОЙКИ AIM", en = "🎯 MAIN AIM SETTINGS", es = "🎯 CONFIGURACIONES PRINCIPALES DE PUNTERÍA", pt = "🎯 CONFIGURAÇÕES PRINCIPAIS DE MIRA", ko = "🎯 주요 조준 설정", ja = "🎯 メインエイム設定", uk = "🎯 ОСНОВНІ НАЛАШТУВАННЯ AIM" },
+        ["toggle_aim"] = { ru = "Включить Aim Assist", en = "Enable Aim Assist", es = "Habilitar Ayuda de Puntería", pt = "Ativar Assistência de Mira", ko = "조준 보조 활성화", ja = "エイムアシスト有効", uk = "Увімкнути Aim Assist" },
+        ["section_aim_settings"] = { ru = "⚙️ НАСТРОЙКИ ПАРАМЕТРОВ", en = "⚙️ PARAMETER SETTINGS", es = "⚙️ CONFIGURACIONES DE PARÁMETROS", pt = "⚙️ CONFIGURAÇÕES DE PARÂMETROS", ko = "⚙️ 매개변수 설정", ja = "⚙️ パラメータ設定", uk = "⚙️ НАЛАШТУВАННЯ ПАРАМЕТРІВ" },
+        ["toggle_aim_prediction"] = { ru = "Предсказание движения", en = "Movement Prediction", es = "Predicción de Movimiento", pt = "Previsão de Movimento", ko = "움직임 예측", ja = "移動予測", uk = "Передбачення руху" },
+        ["toggle_aim_toggle_mode"] = { ru = "Режим переключения (Toggle)", en = "Toggle Mode", es = "Modo de alternancia (Toggle)", pt = "Modo de alternância (Toggle)", ko = "전환 모드 (Toggle)", ja = "切り替えモード (Toggle)", uk = "Режим перемикання (Toggle)" },
+        ["slider_aim_range"] = { ru = "Дальность", en = "Range", es = "Rango", pt = "Alcance", ko = "범위", ja = "範囲", uk = "Дальність" },
+        ["slider_aim_speed"] = { ru = "Скорость аима (Aim speed)", en = "Aim speed", uk = "Швидкість аїму (Aim speed)" },
+        ["dropdown_aim_target"] = { ru = "Цель прицела", en = "Aim Target", es = "Objetivo de Puntería", pt = "Alvo da Mira", ko = "조준 목표", ja = "エイムターゲット", uk = "Ціль прицілу" },
+        ["dropdown_aim_target_head"] = { ru = "Голова", en = "Head", es = "Cabeza", pt = "Cabeça", ko = "머리", ja = "頭", uk = "Голова" },
+        ["dropdown_aim_target_upper"] = { ru = "Верхняя часть тела", en = "UpperTorso", es = "Torso Superior", pt = "Torso Superior", ko = "상체", ja = "上半身", uk = "Верхня частина тіла" },
+        ["dropdown_aim_target_lower"] = { ru = "Нижняя часть тела", en = "LowerTorso", es = "Torso Inferior", pt = "Torso Inferior", ko = "하체", ja = "下半身", uk = "Нижня частина тіла" },
+        ["dropdown_aim_target_root"] = { ru = "Центр", en = "HumanoidRootPart", es = "ParteRaízHumanoide", pt = "ParteRaizHumanoide", ko = "휴머노이드 루트 파트", ja = "ヒューマノイドルートパート", uk = "Центр" },
+        ["section_aim_key"] = { ru = "🎯 КЛАВИША AIM", en = "🎯 AIM KEY", es = "🎯 TECLA DE PUNTERÍA", pt = "🎯 TECLA DE MIRA", ko = "🎯 조준 키", ja = "🎯 エイムキー", uk = "🎯 КЛАВІША AIM" },
+        ["keybind_aim"] = { ru = "🔑 Изменить клавишу Aim", en = "🔑 Change Aim Key", es = "🔑 Cambiar Tecla de Puntería", pt = "🔑 Alterar Tecla de Mira", ko = "🔑 조준 키 변경", ja = "🔑 エイムキー変更", uk = "🔑 Змінити клавішу Aim" },
+
         -- AI Chat
         ["ai_chat_placeholder"] = { ru = "Задай любой вопрос ИИ-ассистенту...", en = "Ask any question to AI Assistant...", uk = "Запитай що завгодно у ШІ-помічника..." },
         ["ai_chat_send"] = { ru = "Отправить", en = "Send", uk = "Надіслати" },

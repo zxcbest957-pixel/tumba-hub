@@ -341,6 +341,7 @@ end)
 Mega.Icons = {
     ["tab_home"] = iconBaseUrl .. "home.png",
     ["tab_esp"] = iconBaseUrl .. "esp.png",
+    ["tab_aim"] = iconBaseUrl .. "aim.png",
     ["tab_player"] = iconBaseUrl .. "player.png",
     ["tab_visuals"] = iconBaseUrl .. "visuals.png",
     ["tab_users"] = iconBaseUrl .. "users.png",
@@ -349,7 +350,7 @@ Mega.Icons = {
     ["tab_ai_chat"] = iconBaseUrl .. "ai_chat.png"
 }
 
-local TabKeys = { "tab_home", "tab_esp", "tab_player", "tab_visuals", "tab_users", "tab_utils", "tab_settings", "tab_ai_chat" }
+local TabKeys = { "tab_home", "tab_esp", "tab_aim", "tab_player", "tab_visuals", "tab_users", "tab_utils", "tab_settings", "tab_ai_chat" }
 local TabButtons = {}
 Mega.Objects.TabFrames = {}
 
