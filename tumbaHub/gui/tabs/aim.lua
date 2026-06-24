@@ -4,6 +4,8 @@
 local tabKey = "tab_aim"
 local UI = Mega.UI
 
+pcall(function() Mega.LoadModule("features/aimbot.lua") end)
+
 -- Create the container frame for this tab
 local TabFrame = Instance.new("ScrollingFrame")
 TabFrame.Name = tabKey
